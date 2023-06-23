@@ -1,0 +1,39 @@
+name: Respond to PR comments
+on:
+  issue_comment:
+    # (ignore 'edited', 'deleted')
+    types: [created]
+
+jobs:
+  pr_comment_hello:
+    if: github.event.issue.pull_request && github.event.comment.body == '/hello'
+    runs-on: ubuntu-latest
+    steps:
+      # (Don't need to check out repo)
+      - name: Post ack comment
+        # Docs: https://github.com/marketplace/actions/create-or-update-comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          body: |
+            Comment received by workflow:
+            ```${{ toJSON(github.event.comment) }}```
+
+  pr_comment_trigger_secondary:
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/secondary' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger secondary workflow
+        id: trigger_secondary
+        uses: .github/workflows/secondary.yaml
+        # Per the docs (https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call),
+        # the called workflow should inherit the branch/ref from caller (PR).
+
+      - name: Post comment with job ID
+        # Docs: https://github.com/marketplace/actions/create-or-update-comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.issue.number }}
+          body: |
+            Started secondary workflow.
+            Job ID?
+            ```${{ toJSON(steps.pr_comment_trigger_secondary.outputs) }}```

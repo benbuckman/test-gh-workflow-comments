@@ -1,0 +1,15 @@
+name: Test secondary workflow
+
+on:
+  # Allow to be called by another workflow - specifically, by `pr-comments.yaml`.
+  # In that case, the branch/ref is inherited from the calling PR.
+  workflow_call:
+
+jobs:
+  'secondary':
+    runs-on: ubuntu-latest
+    steps:
+      - name: ack
+        run: |
+          echo "Ack"
+          echo "github context: ${{ toJSON(github) }}"
