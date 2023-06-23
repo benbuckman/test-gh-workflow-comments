@@ -24,7 +24,7 @@ jobs:
     steps:
       - name: Trigger secondary workflow
         id: trigger_secondary
-        uses: .github/workflows/secondary.yaml
+        uses: ./.github/workflows/secondary.yaml
         # Per the docs (https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call),
         # the called workflow should inherit the branch/ref from caller (PR).
 
