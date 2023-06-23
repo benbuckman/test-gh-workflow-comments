@@ -28,6 +28,10 @@ jobs:
         # Per the docs (https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call),
         # the called workflow should inherit the branch/ref from caller (PR).
 
+      - name: "View github.event context"
+        run: |
+          echo "${{ github.event }}"
+
       - name: Post comment with job ID
         # Docs: https://github.com/marketplace/actions/create-or-update-comment
         uses: peter-evans/create-or-update-comment@v3
