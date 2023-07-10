@@ -28,6 +28,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Debug
+        shell: bash
+        run: |
+          pwd
+          find .
+          ls .github/workflows/secondary.yaml
+
       - name: Trigger secondary workflow
         id: trigger_secondary
         uses: ./.github/workflows/secondary.yaml
