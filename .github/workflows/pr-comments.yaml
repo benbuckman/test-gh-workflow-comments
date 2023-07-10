@@ -17,7 +17,9 @@ jobs:
           issue-number: ${{ github.event.issue.number }}
           body: |
             Comment received by workflow:
-            ```${{ toJSON(github.event.comment) }}```
+            ```
+            ${{ toJSON(github.event.comment) }}
+            ```
 
   pr_comment_trigger_secondary:
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/secondary' }}
@@ -41,4 +43,6 @@ jobs:
           body: |
             Started secondary workflow.
             Job ID?
-            ```${{ toJSON(steps.pr_comment_trigger_secondary.outputs) }}```
+            ```
+            ${{ toJSON(steps.pr_comment_trigger_secondary.outputs) }}
+            ```
