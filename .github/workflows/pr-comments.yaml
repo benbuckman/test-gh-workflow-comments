@@ -23,36 +23,42 @@ jobs:
 
   pr_comment_trigger_secondary:
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/secondary' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+    # Trigger the other workflow
+    uses: ./.github/workflows/secondary.yaml
+    with:
+      pr_num: ${{ github.event.issue.number }}
 
-      - name: Debug
-        shell: bash
-        run: |
-          pwd
-          find .
-          ls .github/workflows/secondary.yaml
+    # steps:
+    #   - name: Checkout
+    #     uses: actions/checkout@v3
 
-      - name: Trigger secondary workflow
-        id: trigger_secondary
-        uses: ./.github/workflows/secondary.yaml
-        # Per the docs (https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call),
-        # the called workflow should inherit the branch/ref from caller (PR).
+    #   - name: Debug
+    #     shell: bash
+    #     run: |
+    #       pwd
+    #       find .
+    #       ls .github/workflows/secondary.yaml
 
-      - name: "View github.event context"
-        run: |
-          echo "${{ github.event }}"
+    #   - name: Trigger secondary workflow
+    #     id: trigger_secondary
+    #     # TODO this needs to be its own JOB not a step!!
+    #     # so we need to make "secondary" (and online_tests.yaml) a COMPOSITE ACTION
+    #     uses: ./.github/workflows/secondary.yaml
+    #     # Per the docs (https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#workflow_call),
+    #     # the called workflow should inherit the branch/ref from caller (PR).
 
-      - name: Post comment with job ID
-        # Docs: https://github.com/marketplace/actions/create-or-update-comment
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Started secondary workflow.
-            Job ID?
-            ```
-            ${{ toJSON(steps.pr_comment_trigger_secondary.outputs) }}
-            ```
+    #   - name: "View github.event context"
+    #     run: |
+    #       echo "${{ github.event }}"
+
+    #   - name: Post comment with job ID
+    #     # Docs: https://github.com/marketplace/actions/create-or-update-comment
+    #     uses: peter-evans/create-or-update-comment@v3
+    #     with:
+    #       issue-number: ${{ github.event.issue.number }}
+    #       body: |
+    #         Started secondary workflow.
+    #         Job ID?
+    #         ```
+    #         ${{ toJSON(steps.pr_comment_trigger_secondary.outputs) }}
+    #         ```

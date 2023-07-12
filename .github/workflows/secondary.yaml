@@ -4,6 +4,17 @@ on:
   # Allow to be called by another workflow - specifically, by `pr-comments.yaml`.
   # In that case, the branch/ref is inherited from the calling PR.
   workflow_call:
+    inputs: &inputs
+      # WIP - pass in an OPTIONAL PR num. If it's there, post a comment; if not, don't.
+      pr_num:
+        description: 'PR number in which to post a comment with link to test run'
+        default: null
+        required: false
+        type: number
+
+  # Allow to be triggered manually
+  workflow_dispatch:
+    inputs: *inputs
 
 jobs:
   'secondary':
@@ -13,3 +24,17 @@ jobs:
         run: |
           echo "Ack"
           echo "github context: ${{ toJSON(github) }}"
+
+      - name: Post comment
+        if: ${{ inputs.pr_num != null }}
+        # Docs: https://github.com/marketplace/actions/create-or-update-comment
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          # issue-number: ${{ github.event.issue.number }}
+          issue-number: ${{ inputs.pr_num }}
+          body: |
+            Started secondary workflow.
+            Inputs:
+            ```
+            ${{ toJSON(inputs) }}
+            ```
