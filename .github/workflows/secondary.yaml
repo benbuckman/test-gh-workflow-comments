@@ -7,7 +7,7 @@ on:
     inputs:
       pr_num:
         description: "PR number in which to post a comment with link to test run"
-        default: null
+        # default: null
         required: false
         type: number
 
