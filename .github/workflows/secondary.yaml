@@ -22,7 +22,7 @@ jobs:
       - name: ack
         run: |
           echo "Ack"
-          echo "github context: ${{ toJSON(github) }}"
+        # echo "github context: ${{ toJSON(github) }}"
 
       - name: Post comment
         if: ${{ inputs.pr_num != null }}
