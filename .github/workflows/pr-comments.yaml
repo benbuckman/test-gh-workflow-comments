@@ -22,6 +22,7 @@ jobs:
             ```
 
   pr_comment_trigger_secondary:
+    name: "trigger secondary and post comment to PR"
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/secondary' }}
     # Trigger the other workflow
     uses: ./.github/workflows/secondary.yaml
@@ -29,5 +30,6 @@ jobs:
       pr_num: ${{ github.event.issue.number }}
 
   pr_comment_trigger_secondary_no_pr:
+    name: "trigger secondary without PR context"
     if: ${{ github.event.issue.pull_request && github.event.comment.body == '/secondary-no-pr' }}
     uses: ./.github/workflows/secondary.yaml
