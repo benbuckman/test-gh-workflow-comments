@@ -23,8 +23,8 @@ jobs:
 
   pr_comment_trigger_secondary:
     name: "trigger secondary and post comment to PR"
-    # if: ${{ github.event.issue.pull_request && contains(fromJSON('["/run-online-tests", "/RUN-ONLINE-TESTS"]'), github.event.comment.body) }}
-    if: ${{ github.event.issue.pull_request && contains(["/run-online-tests", "/RUN-ONLINE-TESTS"], github.event.comment.body) }}
+    if: ${{ github.event.issue.pull_request && contains(fromJSON('["/run-online-tests", "/RUN-ONLINE-TESTS"]'), github.event.comment.body) }}
+    # if: ${{ github.event.issue.pull_request && contains(["/run-online-tests", "/RUN-ONLINE-TESTS"], github.event.comment.body) }}
     # Trigger the other workflow
     uses: ./.github/workflows/secondary.yaml
     with:
