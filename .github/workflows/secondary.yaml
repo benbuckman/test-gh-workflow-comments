@@ -46,4 +46,4 @@ jobs:
             ${{ toJSON(job) }}
             ```
 
-            ${{ github.event.repository.html_url }}/actions/runs/${{ github.event.run_id }}
+            ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
