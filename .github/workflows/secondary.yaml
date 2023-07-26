@@ -40,3 +40,10 @@ jobs:
             ```
             ${{ toJSON(github) }}
             ```
+
+            Job context:
+            ```
+            ${{ toJSON(job) }}
+            ```
+
+            ${{ github.event.repository.html_url }}/actions/runs/{{ github.event.run_id }}
