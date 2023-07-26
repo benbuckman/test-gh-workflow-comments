@@ -16,24 +16,27 @@ on:
     # no inputs / PR context here
 
 jobs:
-  'secondary':
+  "secondary":
     runs-on: ubuntu-latest
     steps:
       - name: ack
         run: |
           echo "Ack"
-        # echo "github context: ${{ toJSON(github) }}"
 
       - name: Post comment
         if: ${{ inputs.pr_num != null }}
         # Docs: https://github.com/marketplace/actions/create-or-update-comment
         uses: peter-evans/create-or-update-comment@v3
         with:
-          # issue-number: ${{ github.event.issue.number }}
           issue-number: ${{ inputs.pr_num }}
           body: |
             Started secondary workflow.
             Inputs:
             ```
             ${{ toJSON(inputs) }}
+            ```
+
+            Github context:
+            ```
+            ${{ toJSON(github) }}
             ```
