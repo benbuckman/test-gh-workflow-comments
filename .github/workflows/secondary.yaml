@@ -2,33 +2,24 @@ name: Test secondary workflow
 
 on:
   # Allow to be called by another workflow - specifically, by `pr-comments.yaml`.
-  # In that case, the branch/ref is inherited from the calling PR.
+  # In that case, `event` context (including branch/ref) is inherited from the calling PR.
   workflow_call:
-    inputs:
-      pr_num:
-        description: "PR number in which to post a comment with link to test run"
-        # default: null
-        required: false
-        type: number
 
   # Allow to be triggered manually
   workflow_dispatch:
     # no inputs / PR context here
 
 jobs:
-  "online-tests":
+  fake_work:
     runs-on: ubuntu-latest
     steps:
-      - name: ack
-        run: |
-          echo "Ack"
-
-      - name: Post comment
-        if: ${{ inputs.pr_num != null }}
+      - name: Post job link to PR
+        id: post_job_link
+        if: github.event.issue && github.event.issue.number != null
         # Docs: https://github.com/marketplace/actions/create-or-update-comment
         uses: peter-evans/create-or-update-comment@v3
         with:
-          issue-number: ${{ inputs.pr_num }}
+          issue-number: ${{ github.event.issue.number }}
           body: |
             Started secondary workflow.
             Inputs:
@@ -47,3 +38,39 @@ jobs:
             ```
 
             ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
+          reactions: hourglass_flowing_sand
+
+      - name: Pretend to do work
+        shell: bash
+        run: |
+          echo "Hello world"
+          if [[ "$(($RANDOM % 3))" == "0" ]]; then
+            echo "Randomly failing"
+            exit 1
+          fi
+
+      - name: Update PR comment on success
+        if: |
+          steps.post_job_link.outputs.comment-id != null &&
+          steps.post_job_link.outcome == 'success'
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ steps.post_job_link.outputs.comment-id }}
+          edit-mode: append
+          body: |
+            ... Success!
+          reactions-edit-mode: replace
+          reactions: white_check_mark,peace_symbol
+
+      - name: Update PR comment on failure
+        if: |
+          steps.post_job_link.outputs.comment-id != null &&
+          steps.post_job_link.outcome == 'failure'
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ steps.post_job_link.outputs.comment-id }}
+          edit-mode: append
+          body: |
+            ... Failed!
+          reactions-edit-mode: replace
+          reactions: exclamation,warning

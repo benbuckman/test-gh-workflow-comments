@@ -5,32 +5,15 @@ on:
     types: [created]
 
 jobs:
-  pr_comment_hello:
-    if: github.event.issue.pull_request && github.event.comment.body == '/hello'
-    runs-on: ubuntu-latest
-    steps:
-      # (Don't need to check out repo)
-      - name: Post ack comment
-        # Docs: https://github.com/marketplace/actions/create-or-update-comment
-        uses: peter-evans/create-or-update-comment@v3
-        with:
-          issue-number: ${{ github.event.issue.number }}
-          body: |
-            Comment received by workflow:
-            ```
-            ${{ toJSON(github.event.comment) }}
-            ```
-
   pr_comment_trigger_secondary:
     name: "trigger secondary and post comment to PR"
-    if: ${{ github.event.issue.pull_request && contains(fromJSON('["/run-online-tests", "/RUN-ONLINE-TESTS"]'), github.event.comment.body) }}
-    # if: ${{ github.event.issue.pull_request && contains(["/run-online-tests", "/RUN-ONLINE-TESTS"], github.event.comment.body) }}
+    if: |
+      github.event.issue.pull_request && (
+        github.event.comment.body == 'RUN-ONLINE-TESTS' ||
+        github.event.comment.body == 'run-online-tests' ||
+        github.event.comment.body == 'RUN ONLINE TESTS' ||
+        github.event.comment.body == 'run online tests' ||
+      )
     # Trigger the other workflow
+    # (which will also post comment(s) back to the calling PR)
     uses: ./.github/workflows/secondary.yaml
-    with:
-      pr_num: ${{ github.event.issue.number }}
-
-  # pr_comment_trigger_secondary_no_pr:
-  #   name: "trigger secondary without PR context"
-  #   if: ${{ github.event.issue.pull_request && github.event.comment.body == '/run-online-tests-no-pr' }}
-  #   uses: ./.github/workflows/secondary.yaml
