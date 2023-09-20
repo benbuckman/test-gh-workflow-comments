@@ -10,8 +10,8 @@ jobs:
     if: |
       github.event.issue.pull_request && (
         github.event.comment.body == 'RUN-ONLINE-TESTS' ||
-        github.event.comment.body == 'run-online-tests' ||
         github.event.comment.body == 'RUN ONLINE TESTS' ||
+        github.event.comment.body == 'run-online-tests' ||
         github.event.comment.body == 'run online tests'
       )
     # Trigger the other workflow

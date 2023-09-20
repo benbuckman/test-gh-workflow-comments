@@ -38,7 +38,7 @@ jobs:
             ```
 
             ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
-          reactions: hourglass_flowing_sand
+            :hourglass_flowing_sand:
 
       - name: Pretend to do work
         shell: bash
@@ -58,9 +58,7 @@ jobs:
           comment-id: ${{ steps.post_job_link.outputs.comment-id }}
           edit-mode: append
           body: |
-            ... Success!
-          reactions-edit-mode: replace
-          reactions: white_check_mark,peace_symbol
+            ... Success! :white_check_mark: :peace_symbol:
 
       - name: Update PR comment on failure
         if: |
@@ -71,6 +69,4 @@ jobs:
           comment-id: ${{ steps.post_job_link.outputs.comment-id }}
           edit-mode: append
           body: |
-            ... Failed!
-          reactions-edit-mode: replace
-          reactions: exclamation,warning
+            ... Failed! :exclamation: :warning:
