@@ -15,13 +15,17 @@ jobs:
     steps:
       - name: Post job link to PR
         id: post_job_link
-        if: github.event.issue && github.event.issue.number != null
+        if: |
+          github.event.issue && github.event.issue.number != null &&
+          github.event.comment && github.event.comment.id != null
         # Docs: https://github.com/marketplace/actions/create-or-update-comment
         uses: peter-evans/create-or-update-comment@v3
         with:
           issue-number: ${{ github.event.issue.number }}
+          comment-id: ${{ github.event.comment.id }}
           body: |
             ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }} :hourglass_flowing_sand:
+          edit-mode: append
 
       - name: Pretend to do work
         id: pretend_work
