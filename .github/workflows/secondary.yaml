@@ -15,9 +15,7 @@ jobs:
     steps:
       - name: Post job link to PR
         id: post_job_link
-        if: |
-          github.event.issue && github.event.issue.number != null &&
-          github.event.comment && github.event.comment.id != null
+        if: github.event.issue.number != null && github.event.comment.id != null
         # Docs: https://github.com/marketplace/actions/create-or-update-comment
         uses: peter-evans/create-or-update-comment@v3
         with:
@@ -38,9 +36,7 @@ jobs:
           fi
 
       - name: Update PR comment on success
-        if: |
-          steps.post_job_link.outputs.comment-id != null &&
-          steps.pretend_work.outcome == 'success'
+        if: success() && steps.post_job_link.outputs.comment-id != null
         uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ steps.post_job_link.outputs.comment-id }}
@@ -50,10 +46,7 @@ jobs:
 
       - name: Update PR comment on failure
         # https://docs.github.com/en/actions/learn-github-actions/expressions#failure-with-conditions
-        if: |
-          failure() &&
-          steps.post_job_link.outputs.comment-id != null &&
-          steps.pretend_work.outcome == 'failure'
+        if: failure() && steps.post_job_link.outputs.comment-id != null
         uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ steps.post_job_link.outputs.comment-id }}
