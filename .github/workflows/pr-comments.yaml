@@ -12,7 +12,7 @@ jobs:
         github.event.comment.body == 'RUN-ONLINE-TESTS' ||
         github.event.comment.body == 'run-online-tests' ||
         github.event.comment.body == 'RUN ONLINE TESTS' ||
-        github.event.comment.body == 'run online tests' ||
+        github.event.comment.body == 'run online tests'
       )
     # Trigger the other workflow
     # (which will also post comment(s) back to the calling PR)
