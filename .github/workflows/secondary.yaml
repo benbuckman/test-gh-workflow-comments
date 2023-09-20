@@ -24,18 +24,19 @@ jobs:
             ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }} :hourglass_flowing_sand:
 
       - name: Pretend to do work
+        id: pretend_work
         shell: bash
         run: |
           echo "Hello world"
-          # if [[ "$(($RANDOM % 2))" == "0" ]]; then
-          #   echo "Failing half the time"
-          #   exit 1
-          # fi
-          echo "Pretend to fail"
-          exit 1
+          if [[ "$(($RANDOM % 3))" == "0" ]]; then
+            echo "Randomly failing"
+            exit 1
+          fi
 
       - name: Update PR comment on success
-        if: ${{ steps.post_job_link.outcome == 'success' && steps.post_job_link.outputs.comment-id != null }}
+        if: |
+          steps.post_job_link.outputs.comment-id != null &&
+          steps.pretend_work.outcome == 'success'
         uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ steps.post_job_link.outputs.comment-id }}
@@ -44,14 +45,12 @@ jobs:
             ... Success! :white_check_mark: :peace_symbol:
 
       - name: Update PR comment on failure
-        # https://docs.github.com/en/actions/learn-github-actions/expressions#failure-with-conditions
-        # if: ${{ failure() && steps.post_job_link.outcome == 'failure' && steps.post_job_link.outputs.comment-id != null }}
-        if: ${{ failure() && steps.post_job_link.outputs.comment-id != null }}
+        if: |
+          steps.post_job_link.outputs.comment-id != null &&
+          steps.pretend_work.outcome == 'failure'
         uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ steps.post_job_link.outputs.comment-id }}
           edit-mode: append
           body: |
-            Outcome: '${{ steps.post_job_link.outcome }}'
-            Conclusion: '${{ steps.post_job_link.conclusion }}'
             ... Failed! :exclamation: :warning:
