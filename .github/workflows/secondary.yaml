@@ -21,24 +21,7 @@ jobs:
         with:
           issue-number: ${{ github.event.issue.number }}
           body: |
-            Started secondary workflow.
-            Inputs:
-            ```
-            ${{ toJSON(inputs) }}
-            ```
-
-            Github context:
-            ```
-            ${{ toJSON(github) }}
-            ```
-
-            Job context:
-            ```
-            ${{ toJSON(job) }}
-            ```
-
-            ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }}
-            :hourglass_flowing_sand:
+            ${{ github.event.repository.html_url }}/actions/runs/${{ github.run_id }} :hourglass_flowing_sand:
 
       - name: Pretend to do work
         shell: bash
