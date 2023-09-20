@@ -53,4 +53,5 @@ jobs:
           edit-mode: append
           body: |
             Outcome: '${{ steps.post_job_link.outcome }}'
+            Conclusion: '${{ steps.post_job_link.conclusion }}'
             ... Failed! :exclamation: :warning:
