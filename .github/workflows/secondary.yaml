@@ -32,10 +32,11 @@ jobs:
         shell: bash
         run: |
           echo "Hello world"
-          if [[ "$(($RANDOM % 3))" == "0" ]]; then
-            echo "Randomly failing"
-            exit 1
-          fi
+          # if [[ "$(($RANDOM % 3))" == "0" ]]; then
+          #   echo "Randomly failing"
+          #   exit 1
+          # fi
+          exit 1
 
       - name: Update PR comment on success
         if: |
