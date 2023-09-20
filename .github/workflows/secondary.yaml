@@ -45,7 +45,9 @@ jobs:
             ... Success! :white_check_mark: :peace_symbol:
 
       - name: Update PR comment on failure
+        # https://docs.github.com/en/actions/learn-github-actions/expressions#failure-with-conditions
         if: |
+          failure() &&
           steps.post_job_link.outputs.comment-id != null &&
           steps.pretend_work.outcome == 'failure'
         uses: peter-evans/create-or-update-comment@v3
