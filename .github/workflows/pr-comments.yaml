@@ -17,3 +17,5 @@ jobs:
     # Trigger the other workflow
     # (which will also post comment(s) back to the calling PR)
     uses: ./.github/workflows/secondary.yaml
+    secrets:
+      FOO: ${{ secrets.FOO }}

@@ -4,6 +4,9 @@ on:
   # Allow to be called by another workflow - specifically, by `pr-comments.yaml`.
   # In that case, `event` context (including branch/ref) is inherited from the calling PR.
   workflow_call:
+    secrets:
+      FOO:
+        required: true
 
   # Allow to be triggered manually
   workflow_dispatch:
