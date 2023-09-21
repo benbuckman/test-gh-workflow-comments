@@ -12,6 +12,8 @@ on:
 jobs:
   fake_work:
     runs-on: ubuntu-latest
+    env:
+      FOO: ${{ secrets.FOO }}
     steps:
       - name: Post job link to PR
         id: post_job_link
@@ -30,6 +32,13 @@ jobs:
         shell: bash
         run: |
           echo "Hello world"
+          echo "FOO: $FOO"
+          # it's not really a secret
+          if [[ "$FOO" != "bar" ]]; then
+            echo "Unexpected secret value"
+            exit 1
+          fi
+
           if [[ "$(($RANDOM % 2))" == "0" ]]; then
             echo "Randomly failing"
             exit 1
